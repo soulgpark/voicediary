@@ -41,7 +41,7 @@ Voice Diary is a diary application that converts user speech into text and analy
 2. Install FFmpeg
   - Download and install FFmpeg, then add it to your system PATH.
  3. Set up Google Cloud Service Account
- -Generate a service account key (JSON) from Google Cloud Console
+  - Generate a service account key (JSON) from Google Cloud Console
 
 
 ## Execution
