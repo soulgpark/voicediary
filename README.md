@@ -1,6 +1,6 @@
 # Voice Diary: Emotion Tracking with Speech Recognition
 
-Voice Diary is a diary application that converts user speech into text and analyzes emotions to record them:smiley: It visually displays emotions and helps users track their emotional patterns over time.
+Voice Diary is a diary application that converts user speech into text and analyzes emotions to record them :smiley: It visually displays emotions and helps users track their emotional patterns over time.
 
 
 ## Table of Contents
