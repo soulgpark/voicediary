@@ -52,12 +52,12 @@ Voice Diary is a diary application that converts user speech into text and analy
 
 https://github.com/user-attachments/assets/2df8e10c-fd9f-432d-a681-10fee57ce52b
 
-#### User Interface Overview
+### User Interface Overview
 1. **Main Page**: The homepage where users can record their voice, analyze emotions, and navigate to past records or the calendar.
 2. **Past Record**: A page showing previous transcriptions and their corresponding emotions for specific dates.
 3. **Emotion Calendar**: A calendar view displaying the emotions recorded for each day.
 
-#### How It Works
+### How It Works
 1. **Recording**:
    - Click the "Recording" button to start recording your voice.
    - Click "Stop Recording" when you're done.
