@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Diary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .transcription-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+        }
+        #transcription {
+            width: 60%;
+            height: 70px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+            background-color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        button:hover {
+            background-color: #f0f0f0;
+        }
+        #recordButton {
+            margin-left: 20px;
+        }
+        #emotion {
+            font-size: 2rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>How are you today?</h1>
+    <div class="transcription-container">
+        <div id="transcription">Talk about your day</div>
+        <button id="recordButton">Recording</button>
+    </div>
+    <div id="emotion">😊😐😢😡</div>
+    <button data-action="calendar">Emotion Calendar</button>
+    <button data-action="history">Past Record</button>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        const recordButton = document.getElementById('recordButton');
+        const transcriptionDiv = document.getElementById('transcription');
+        const emotionDiv = document.getElementById('emotion');
+
+        const emotionMap = {
+            "happy": "😊",
+            "neutral": "😐",
+            "sad": "😢",
+            "angry": "😡"
+        };
+
+        recordButton.addEventListener('click', async () => {
+            if (recordButton.textContent === "Recording") {
+                await startRecording();
+                recordButton.textContent = "Stop Recording";
+            } else {
+                await stopRecording();
+                recordButton.textContent = "Start Recording";
+            }
+        });
+
+        document.querySelector('[data-action="calendar"]').addEventListener('click', () => {
+            window.location.href = '/calendar';
+        });
+        document.querySelector('[data-action="history"]').addEventListener('click', () => {
+            window.location.href = '/history-page';
+        });
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.start();
+        }
+
+        async function stopRecording() {
+            mediaRecorder.stop();
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
+
+                const response = await fetch('/record', { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.success) {
+                    transcriptionDiv.textContent = result.transcription;
+                    emotionDiv.textContent = emotionMap[result.emotion] || "😐";
+                } else {
+                    transcriptionDiv.textContent = "Error: " + result.error;
+                    emotionDiv.textContent = "😐";
+                }
+            };
+        }
+    </script>
+</body>
+</html>

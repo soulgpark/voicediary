@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcription History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .history-container {
+            width: 80%;
+            margin: 0 auto;
+            height: 70px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .history-item {
+            margin-bottom: 20px;
+        }
+        .date {
+            font-weight: bold;
+            color: #333;
+        }
+        .emotion {
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+        .transcription {
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Past Record</h1>
+    <div class="history-container" id="history">
+    </div>
+
+    <script>
+        async function loadHistory() {
+            try {
+                const response = await fetch('/history');
+                if (!response.ok) throw new Error('Failed to load history');
+                
+                const history = await response.json();
+                const historyContainer = document.getElementById('history');
+
+                const emotionMap = {
+                    "happy": "😊",
+                    "neutral": "😐",
+                    "sad": "😢",
+                    "angry": "😡"
+                };
+
+                for (const [date, data] of Object.entries(history)) {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+
+                    historyItem.innerHTML = `
+                        <div class="date">${date}</div>
+                        <div class="emotion">${emotionMap[data.emotion] || "😐"}</div>
+                        <div class="transcription">${data.transcription}</div>
+                    `;
+
+                    historyContainer.appendChild(historyItem);
+                }
+            } catch (error) {
+                console.error('Error loading history:', error);
+                const historyContainer = document.getElementById('history');
+                historyContainer.textContent = 'Failed to load history. Please try again later.';
+            }
+        }
+
+        loadHistory();
+    </script>
+</body>
+</html>

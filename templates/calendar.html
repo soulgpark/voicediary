@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ccc;
+            text-align: center;
+            height: 90px;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .emoji {
+            font-size: 2rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emotion Calendar</h1>
+    <table id="calendar">
+    </table>
+
+    <script>
+        async function loadCalendar() {
+            try {
+                const response = await fetch('/calendar-data');
+                if (!response.ok) throw new Error('Failed to load calendar data');
+                const emotionsByDate = await response.json();
+
+                const calendarTable = document.getElementById('calendar');
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = today.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1).getDay();
+
+                let html = '<tr>';
+                ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+                    html += `<th>${day}</th>`;
+                });
+                html += '</tr><tr>';
+
+                for (let i = 0; i < firstDay; i++) {
+                    html += '<td></td>';
+                }
+
+                const emojiMap = {
+                    happy: '😊',
+                    sad: '😢',
+                    angry: '😡',
+                    neutral: '😐',
+                };
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const emotion = emotionsByDate[dateStr];
+                    const emoji = emojiMap[emotion] || '';
+
+                    html += `
+                        <td>
+                            <div>${day}</div>
+                            <div class="emoji">${emoji}</div>
+                        </td>
+                    `;
+
+                    if ((day + firstDay) % 7 === 0) {
+                        html += '</tr><tr>';
+                    }
+                }
+
+                html += '</tr>';
+                calendarTable.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading calendar:', error);
+                document.getElementById('calendar').innerHTML = '<tr><td colspan="7">Failed to load calendar. Please try again later.</td></tr>';
+            }
+        }
+
+        loadCalendar();
+    </script>
+</body>
+</html>
