@@ -58,18 +58,18 @@ https://github.com/user-attachments/assets/2df8e10c-fd9f-432d-a681-10fee57ce52b
 3. **Emotion Calendar**: A calendar view displaying the emotions recorded for each day.
 
 ### How It Works
-1. **Recording**:
+1. **Recording**
    - Click the "Recording" button to start recording your voice.
    - Click "Stop Recording" when you're done.
    - The recorded audio is sent to the server for transcription and emotion analysis.
    
-2. **Text Conversion**:
+2. **Text Conversion**
    - The recorded voice is converted into text using Google Cloud Speech-to-Text API.
 
-3. **Emotion Analysis**:
-   - The transcription is analyzed using Google Cloud Natural Language API to determine the emotion (happy, sad, angry, or neutral).
+3. **Emotion Analysis**
+   - The transcription is analyzed using Google Cloud Natural Language API to determine the emotion (happy :smile:, sad :cry:, angry :pout:, neutral:neutral_face:).
 
-4. **Data Visualization**:
+4. **Data Visualization**
    - The transcription and emotion are saved with the current date.
    - Users can view emotions in a **calendar view** or check detailed **past records**.
 
